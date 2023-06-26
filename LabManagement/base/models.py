@@ -21,8 +21,9 @@ class Patient(models.Model):
     
     def __str__(self):
         return str(self.name)
+    
     def is_authenticated(self):
-        return True
+        pass
 
 class Tests(models.Model):
     test_id = models.AutoField(primary_key=True)
