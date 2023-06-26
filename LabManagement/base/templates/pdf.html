@@ -1,0 +1,40 @@
+<table class="table">
+    <thead>
+      <tr>
+        <th>Date/Time Conducted</th>
+        <th>Total Tests Cost</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{ visit.date_time_conducted }}</td>
+        <td>{{ visit.total_tests_cost }}</td>
+      </tr>
+      <tr>
+        <td colspan="5">
+          <div>
+            <table class="inner-table">
+              <thead>
+                <tr>
+                  <th>Serial No</th>
+                  <th>Test Id</th>
+                  <th>Test Name</th>
+                  <th>Test Cost</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for vd in visit_details %}
+                <tr>
+                  <td>{{ forloop.counter }}</td>
+                  <td>{{ vd.test.test_id }}</td>
+                  <td>{{ vd.test.name }}</td>
+                  <td>{{ vd.test_cost }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>

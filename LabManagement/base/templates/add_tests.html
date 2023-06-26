@@ -1,0 +1,68 @@
+{% extends 'lab_base.html' %}
+{% load static %}
+
+
+
+
+
+{% block main %}
+
+
+
+<div class="card shadow m-2">
+    <div class="card-body">
+        <h5 class = "py-2" style="border-bottom : 2px solid black">Add Tests</h5>
+        
+
+        <div class="contaner-fluid">
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-row">
+ 
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Test Name</label>
+                            <input type="text" name="name" placeholder="Enter Test Name" class="form-control narrower-input" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Test Cost</label>
+                            <input type="number" name="cost" placeholder="Enter test cost" class="form-control narrower-input" required>
+                        </div>
+                    </div>
+              
+                </div>
+            </div>
+                <button type="submit" id="submitButton">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% if error == "No" %}
+<div class="alert alert-success position-fixed top-0" style="right: 0;">
+    Test added successfully.
+</div>
+<script>
+    // Redirect after a delay
+    setTimeout(function() {
+        window.location.href = "{% url 'testAdd' %}";
+    }, 1000); // Redirect after 1 seconds
+</script>
+{% endif %}
+
+{% if error == "Yes" %}
+<div class="alert alert-danger position-fixed top-0" style="right: 0;">
+    {{msg}}
+</div>
+<script>
+    // Redirect after a delay
+    setTimeout(function() {
+        window.location.href = "{% url 'testAdd' %}";
+    }, 1000); // Redirect after 1 seconds
+</script>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,85 @@
+{% load static %}
+
+{% include 'header.html' %}
+
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+<script>
+    function checkpassword()
+    {
+        if(document.signup.password.value!=document.signup.cpassword.value)
+        {
+            alert("Password and Confirm password field does not match");
+            document.signup.cpassword.focus();
+            return false
+        }
+        return true
+    }
+</script>
+
+
+<div class="card shadow m-2">
+    <div class="card-body">
+        <h5 style="border-bottom : 2px solid black">Create an Account</h5>
+
+        <div class="contaner-fluid">
+            <form method="post" name="signup" onsubmit="return checkpassword()">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" name="name" placeholder="Enter your name" class="form-control narrower-input" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" name="email" placeholder="Enter your email" class="form-control narrower-input" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Mobile number</label>
+                            <input type="number" name="mobile_number" placeholder="Enter your mobile number" class="form-control narrower-input" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Username</label>
+                            <input type="text" name="username" placeholder="Enter your username" class="form-control narrower-input" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" name="password" placeholder="Enter your password" class="form-control narrower-input" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Confirm Password</label>
+                            <input type="password" name="cpassword" placeholder="Confirm your password" class="form-control narrower-input" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                <input type="submit" value="Submit" class="btn btn-primary">
+
+            </form>
+        </div>
+    </div>
+</div>
+
+{% if error == "No" %}
+<script>
+    alert('SignUp Successfull');
+    window.location = ("{% url 'lablogin' %}");
+</script>
+{% endif %}
+{% if error == "Yes" %}
+<script>
+    alert("Something went wrong, Try again");
+</script>
+{% endif %}

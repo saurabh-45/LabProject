@@ -1,0 +1,14 @@
+*{
+    box-sizing: border-box;
+}
+.nav-link{
+    color: white !important;
+}
+.nav-link:hover{
+    color: aqua !important;
+    background-color: red;
+    border-radius: 15px;
+}
+.narrower-input {
+    max-width: 300px !important; /* Adjust the value as needed */
+  }

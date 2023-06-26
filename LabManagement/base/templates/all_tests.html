@@ -1,0 +1,109 @@
+{% extends 'lab_base.html' %}
+
+
+
+
+
+
+
+{% block main %}
+<style>
+    .table-container {
+        overflow-y: auto;
+        max-height: calc(100vh - 200px); /* Adjust the height as needed */
+    }
+</style>
+
+
+
+<div class="card shadow m-2">
+    <div class="card-body">
+        <h5 class="p-2 text-dark" style="border-bottom: 2px solid black; font-size: x-large;">Available Tests</h5>
+        
+        <div class="container-fluid table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>S No.</th>
+                        <th>Test ID</th>
+                        <th>Test Name</th>
+                        <th>Test Cost</th>
+                        <th>Actions</th> <!-- Add a column for actions -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for test in tests %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ test.test_id }}</td>
+                        <td>{{ test.name }}</td>
+                        <td>{{ test.cost }}</td>
+                        <td>
+                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editTestModal{{ test.test_id }}">
+                                Edit
+                            </button>
+                        </td>
+                    </tr>
+                    <!-- Edit Test Modal -->
+                    <div class="modal fade" id="editTestModal{{ test.test_id }}" tabindex="-1" role="dialog" aria-labelledby="editTestModalLabel{{ test.test_id }}" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editTestModalLabel{{ test.test_id }}">Edit Test</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Form to edit the test details -->
+                                    <form method="post" action="{% url 'testUpdate' test.test_id %}">
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            <label>Test Name</label>
+                                            <input type="text" name="name" value="{{ test.name }}" class="form-control" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Test Cost</label>
+                                            <input type="number" name="cost" value="{{ test.cost }}" class="form-control" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Save</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% if error == "No" %}
+<div class="alert alert-success position-fixed top-0" style="right: 0;">
+    Test updated successfully.
+</div>
+<script>
+    // Redirect after a delay
+    setTimeout(function() {
+        window.location.href = "{% url 'testList' %}";
+    }, 400); // Redirect after 1 seconds
+</script>
+{% endif %}
+
+{% if error == "Yes" %}
+<div class="alert alert-danger position-fixed top-0" style="right: 0;">
+    Could not update the Test
+</div>
+<script>
+    // Redirect after a delay
+    setTimeout(function() {
+        window.location.href = "{% url 'testList' %}";
+    }, 400); // Redirect after 1 seconds
+</script>
+{% endif %}
+
+
+
+
+{% endblock %}

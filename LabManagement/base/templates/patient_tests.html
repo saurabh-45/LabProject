@@ -1,0 +1,80 @@
+{% extends 'patient_base.html' %}
+{% load static %}
+
+{% block main %}
+
+
+<style>
+    .table-container {
+        overflow-y: auto;
+        max-height: calc(100vh - 200px); /* Adjust the height as needed */
+    }
+</style>
+
+
+
+<div class="card shadow m-2">
+    <div class="card-body">
+        <h5 class="p-2 text-dark" style="border-bottom: 2px solid black; font-size: x-large;">Your Test History</h5>
+        
+        <div class="container-fluid table-container">
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th>Serial No</th>
+                    <th>Date/Time Conducted</th>
+                    <th>Total Tests Cost</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for test_data in tests_data %}
+                  <tr>
+                  <tr data-toggle="collapse" data-target="#test-{{ forloop.counter }}" aria-expanded="false" aria-controls="test-{{ forloop.counter }}">
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ test_data.date_time_conducted }}</td>
+                    <td>{{ test_data.total_tests_cost }}</td>
+                    <td>
+                      <a target="_blank" href="{% url 'labregisterprint' test_data.visit_id %}">
+                        <button class="btn btn-primary">Print</button>
+                      </a>
+                    </td>
+
+                  </tr>
+                  <tr>
+                    <td colspan="5" class="hiddenRow">
+                      <div id="test-{{ forloop.counter }}" class="collapse">
+                        <table class="inner-table">
+                          <thead>
+                            <tr>
+                              <th>Serial No</th>
+                              <th>Test Id</th>
+                              <th>Test Name</th>
+                              <th>Test Cost</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for test_number, test_data in test_data.tests.items %}
+                            <tr>
+                              <!-- <td>{{ forloop.counter }}</td> -->
+                              <td>{{ test_number }}</td>
+                              <td>{{ test_data.0 }}</td>
+                              <td>{{ test_data.1 }}</td>
+                              <td>{{ test_data.2 }}</td>
+                            </tr>
+                            {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+              
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

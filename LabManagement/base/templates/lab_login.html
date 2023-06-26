@@ -1,0 +1,57 @@
+{% load static %}
+
+{% include 'header.html' %}
+
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+
+
+
+<div class="card shadow m-5">
+    <div class="card-body">
+        <h5 class = "py-2" style="border-bottom : 2px solid black">Lab Login</h5>
+        
+        <div class="contaner-fluid">
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Username</label>
+                            <input type="text" name="username" placeholder="Enter your username" class="form-control narrower-input" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" name="password" placeholder="Enter your password" class="form-control narrower-input" required>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+                <input type="submit" value="Login" class="btn btn-primary">
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% if error == "No" %}
+<div class="alert alert-success position-fixed top-0" style="right: 0;">
+    Logged in successfully.
+</div>
+<script>
+    // Redirect after a delay
+    setTimeout(function() {
+        window.location.href = "{% url 'labhome' %}";
+    }, 2000); // Redirect after 3 seconds
+</script>
+{% endif %}
+
+{% if error == "Yes" %}
+<div class="alert alert-danger position-fixed top-0" style="right: 0;">
+    Invalid credentials.
+</div>
+{% endif %}

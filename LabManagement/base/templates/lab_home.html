@@ -1,0 +1,17 @@
+{% extends 'lab_base.html' %}
+{% load static %}
+
+
+{% block main %}
+
+<div class="row text-center m-0 border-">
+    <div class="col-sm-12 p-2">
+        <div class="card shadow">
+            <div class="card-body">
+                <h4 class="text-success text-capitalize"> Welcome back {{request.user.name}}</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
