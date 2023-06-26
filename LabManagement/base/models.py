@@ -45,14 +45,6 @@ class VisitDetails(models.Model):
 
 
 
-# class TestAssignment(models.Model):
-#     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-#     test = models.ForeignKey(Tests, on_delete=models.CASCADE)
-#     date_conducted = models.DateField(auto_now_add=True)
-
-
-
-
 
 
 

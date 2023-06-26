@@ -22,22 +22,12 @@ class LabUserSignupView(View):
         return render(request, 'signup.html')
 
 
-    def post(self, request):
-        # Get the form data
-        # data = json.loads(request.body)
-        # name = data.get('name')
-        # email = data.get('email')
-        # mobile_number = data.get('mobile_number')
-        # username = data.get('username')
-        # password = data.get('password')
-      
+    def post(self, request):      
         name = request.POST.get('name')
         email = request.POST.get('email')
         mobile_number = request.POST.get('mobile_number')
         username = request.POST.get('username')
         password = request.POST.get('password')
-
-        # Create a new LabUser object
         error = ""
         try:
             lab_user = LabAdmin.objects.create_user(username=username, password=password)
@@ -56,11 +46,6 @@ class LabUserLoginView(View):
         return render(request, 'lab_login.html')
 
     def post(self, request):
-        # Get the form data
-        # data = json.loads(request.body)
-        # username = data.get('username')
-        # password = data.get('password')
-
         username = request.POST.get('username')
         password = request.POST.get('password')
         error = ""
@@ -84,9 +69,6 @@ class TestAddView(View):
         msg = ""
         print(request.body)
         try:
-            # data = json.loads(request.body)
-            # name = data.get('name')
-            # cost = data.get('cost')
 
             name = request.POST.get('name')
             cost = request.POST.get('cost')
@@ -106,12 +88,7 @@ class TestUpdateView(View):
     def post(self, request, test_id):
         error = ""
         try:
-            # data = json.loads(request.body)
-            # test = Tests.objects.get(test_id=test_id)
-            # test.name = data.get('name')
-            # test.cost = data.get('cost')
             test = Tests.objects.get(test_id=test_id)
-            # test.name = request.POST.get('name')
             test.cost = request.POST.get('cost')
             test.save()
             error = "No"
@@ -149,12 +126,10 @@ class LabRegisterPrint(View):
         pdf = html_to_pdf('pdf.html',locals())
         return HttpResponse(pdf, content_type='application/pdf')
 
-# @method_decorator(login_required(login_url='home'), name='dispatch')
 class LabUserHome(View):
     def get(self, request):
         return render(request ,'lab_home.html')
 
-# @method_decorator(login_required(login_url='home'), name='dispatch')
 class AssignTestViewTemp(View):
     def get(self, request):
         tests = Tests.objects.all()
@@ -162,18 +137,11 @@ class AssignTestViewTemp(View):
 
     def post(self, request):
         print(request.body)
-        # data = json.loads(request.body)
-        # patient_name = data.get('name')
-        # patient_email = data.get('email')
-        # patient_mobile = data.get('mobile_number')
-        # age = data.get('age')
-
         patient_name = request.POST.get('name')
         patient_email = request.POST.get('email')
         patient_mobile = request.POST.get('mobile_number')
         age = request.POST.get('age')
         response_obj = {}
-        # print(request.body)
         print(request.POST)
         try:
             patient, created = Patient.objects.get_or_create(email=patient_email, mobile_number=patient_mobile)
@@ -182,7 +150,6 @@ class AssignTestViewTemp(View):
                 patient.age = age
                 patient.password = "admin"
                 patient.save()
-            # test_ids = data.get("tests", [])
             test_ids = request.POST.getlist('tests')
             print("TEST Post Data:",test_ids)
             tests = Tests.objects.filter(test_id__in=test_ids)
@@ -199,14 +166,10 @@ class AssignTestViewTemp(View):
             response_obj["total_cost"] = float(total_cost)       
             response_obj = json.dumps(response_obj)
             error = "No"
-            print("yes")
         except Exception as e:
-            print(e)
             error = "Yes"
-        # return HttpResponse(response_obj)
         return render(request, 'lab_register.html', locals())
     
-# @method_decorator(login_required(login_url='patientlogin'), name='dispatch')
 class PatientHome(View):
     def get(self, request):
         return render(request ,'patient_home.html')
@@ -217,19 +180,10 @@ class PatientLoginView(View):
         return render(request, 'patient_login.html')
 
     def post(self, request):
-        # Get the form data
-        # data = json.loads(request.body)
-        # username = data.get('username')
-        # password = data.get('password')
-        print(request.body)
-
-
         username = request.POST.get('mobile_number')
         password = request.POST.get('password')
         error = ""
         # Authenticate the lab user
-        print(password)
-        print()
         user = authenticate(request, username=username, password=password, model="Patient")
 
         if user is not None:
@@ -252,20 +206,14 @@ class PatientTestsView(View):
             tests = VisitDetails.objects.filter(visit=visit)
             test_data = {}
 
-            # for test in tests:
             for i, test in enumerate(tests):
                 tests = []
                 tests.append(str(test.test.test_id))
                 tests.append(str(test.test.name))
                 tests.append(str(test.test_cost))
                 test_data[i+1] = tests
-                # test_data[test.test.cost] = float(test.test.cost)
-                # test_data[test.test.name] = str(test.test_cost)
-            # total_cost = sum(test.test.cost for test in tests)
-            print(test_data)
             tests_and_bills.append({'date_time_conducted': str(visit.date_time), 'tests': test_data, 'visit_id' : visit.id, 'total_tests_cost':str(visit.total_tests_cost)})
     
-        # response_obj = {"patient_name":patient.name, "tests_data" : tests_and_bills}
         response_obj = {"tests_data" : tests_and_bills}
         return render(request, 'patient_tests.html', response_obj)
 
