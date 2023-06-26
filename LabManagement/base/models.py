@@ -10,7 +10,6 @@ class LabAdmin(AbstractUser):
     def __str__(self):
         return str(self.name)
 
-
 class Patient(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
@@ -22,7 +21,9 @@ class Patient(models.Model):
     
     def __str__(self):
         return str(self.name)
-    
+    def is_authenticated(self):
+        return True
+
 class Tests(models.Model):
     test_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
@@ -41,32 +42,3 @@ class VisitDetails(models.Model):
     visit = models.ForeignKey(Visit, on_delete=models.CASCADE)
     test = models.ForeignKey(Tests, on_delete=models.CASCADE)
     test_cost = models.DecimalField(max_digits=8, decimal_places=2)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# class Bill(models.Model):
-#     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-#     total_cost = models.DecimalField(max_digits=8, decimal_places=2)
-#     date = models.DateField(auto_now_add=True)
-
-
-# class PatientTest(models.Model):
-#     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-#     test = models.ForeignKey(Tests, on_delete=models.CASCADE)
-
-#     def __str__(self):
-#         return f"{self.patient} - {self.test}"

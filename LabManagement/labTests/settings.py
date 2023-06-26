@@ -148,3 +148,6 @@ AUTHENTICATION_BACKENDS = [
     'labTests.backends.CustomAuthenticationBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
+
+
+SESSION_COOKIE_SECURE = False

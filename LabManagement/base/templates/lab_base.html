@@ -29,8 +29,6 @@
                     <a href="{% url 'labregister' %}" class="list-group-item list-group-item-warning list-group-item-action  {% if request.path == '/lab/register/' %} active {% endif %}">Register Patients</a>
                     <a href="{% url 'testAdd' %}" class="list-group-item list-group-item-warning list-group-item-action {% if request.path == '/lab/test/add/' %} active {% endif %}">Add Tests</a>
                     <a href="{% url 'testList' %}" class="list-group-item  list-group-item-warning list-group-item-action {% if request.path == '/lab/test/' %} active {% endif %}">Available Tests</a>
-                    <a href="" class="list-group-item list-group-item-warning list-group-item-action">Update Tests</a>
-                    <a href="" class="list-group-item  list-group-item-warning list-group-item-action">View Past Tests</a>
                     <a href="{% url 'lablogout' %}" class="list-group-item  list-group-item-warning list-group-item-action">Log out</a>
                 </div>
                 </div>

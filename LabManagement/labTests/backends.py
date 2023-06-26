@@ -8,6 +8,7 @@ class CustomAuthenticationBackend(ModelBackend):
             # Authenticate against the Patients model
             patient = Patient.objects.filter(mobile_number=username).first()
             if patient is not None and patient.password == password:
+                print("patient is authenticated")
                 return patient
         else:
             # Authenticate against the User model

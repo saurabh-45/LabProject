@@ -39,19 +39,14 @@
 
 
 {% if error == "No" %}
-<div class="alert alert-success position-fixed top-0" style="right: 0;">
-    Logged in successfully.
-</div>
 <script>
-    // Redirect after a delay
-    setTimeout(function() {
-        window.location.href = "{% url 'labhome' %}";
-    }, 2000); // Redirect after 3 seconds
+alert('Logged in  Successfully');
+window.location = ("{% url 'labhome' %}");
 </script>
 {% endif %}
 
 {% if error == "Yes" %}
-<div class="alert alert-danger position-fixed top-0" style="right: 0;">
-    Invalid credentials.
-</div>
+<script>
+    alert("Invalid Credentials, Try again");
+</script>
 {% endif %}

@@ -7,22 +7,21 @@ from .models import LabAdmin, Tests,Patient, Visit, VisitDetails
 import json
 from datetime import datetime
 from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
 from .utils import html_to_pdf
+from functools import wraps
+from .utils import lab_login_required,patient_login_required, generate_default_password
 
-# Create your views here.
+
 class Home(View):
     def get(self, request):
         return render(request, 'index.html')
-
 
 # Lab User Signup View
 class LabUserSignupView(View):
     def get(self, request):
         return render(request, 'signup.html')
 
-
-    def post(self, request):      
+    def post(self, request):
         name = request.POST.get('name')
         email = request.POST.get('email')
         mobile_number = request.POST.get('mobile_number')
@@ -61,6 +60,7 @@ class LabUserLoginView(View):
         return render(request, 'lab_login.html', locals())
 
 class TestAddView(View):
+    @lab_login_required
     def get(self, request):
         return render(request, 'add_tests.html')
 
@@ -69,7 +69,6 @@ class TestAddView(View):
         msg = ""
         print(request.body)
         try:
-
             name = request.POST.get('name')
             cost = request.POST.get('cost')
             if Tests.objects.filter(name=name).exists():
@@ -97,6 +96,7 @@ class TestUpdateView(View):
         return render(request, 'all_tests.html', locals())    
 
 class TestListView(View):
+    @lab_login_required
     def get(self, request):
         tests = Tests.objects.all()
         response_obj = []
@@ -116,7 +116,6 @@ class TestDeleteView(View):
         test.delete()
         return HttpResponse('Test deleted successfully')
 
-
 class LabRegisterPrint(View):
     def get(self, request, visit_id):
         visit = Visit.objects.get(id=visit_id)
@@ -125,18 +124,22 @@ class LabRegisterPrint(View):
         visit_details = VisitDetails.objects.filter(visit=visit)
         pdf = html_to_pdf('pdf.html',locals())
         return HttpResponse(pdf, content_type='application/pdf')
+    
 
 class LabUserHome(View):
+    @lab_login_required
     def get(self, request):
+        print(request)
         return render(request ,'lab_home.html')
 
+
 class AssignTestViewTemp(View):
+    @lab_login_required
     def get(self, request):
         tests = Tests.objects.all()
         return render(request, 'lab_register.html', locals())
 
     def post(self, request):
-        print(request.body)
         patient_name = request.POST.get('name')
         patient_email = request.POST.get('email')
         patient_mobile = request.POST.get('mobile_number')
@@ -148,10 +151,9 @@ class AssignTestViewTemp(View):
             if created:
                 patient.name = patient_name
                 patient.age = age
-                patient.password = "admin"
+                patient.password = generate_default_password(patient.name)
                 patient.save()
             test_ids = request.POST.getlist('tests')
-            print("TEST Post Data:",test_ids)
             tests = Tests.objects.filter(test_id__in=test_ids)
             total_cost = sum(test.cost for test in tests)
             visit = Visit.objects.create(patient=patient, date_time=datetime.now(), total_tests_cost=total_cost)
@@ -167,10 +169,12 @@ class AssignTestViewTemp(View):
             response_obj = json.dumps(response_obj)
             error = "No"
         except Exception as e:
+            print(e)
             error = "Yes"
         return render(request, 'lab_register.html', locals())
     
 class PatientHome(View):
+    @patient_login_required
     def get(self, request):
         return render(request ,'patient_home.html')
 
@@ -185,18 +189,17 @@ class PatientLoginView(View):
         error = ""
         # Authenticate the lab user
         user = authenticate(request, username=username, password=password, model="Patient")
-
         if user is not None:
             # Log in the lab user
             login(request, user)
             error = "No"
-            print("user is auth")
         else:
             error = "Yes"
         return render(request, 'patient_login.html', locals())
-
+    
 
 class PatientTestsView(View):
+    @patient_login_required
     def get(self, request, id):
         patient = Patient.objects.get(id=id)
         # Generate data for displaying test history and combined bill
@@ -213,8 +216,7 @@ class PatientTestsView(View):
                 tests.append(str(test.test_cost))
                 test_data[i+1] = tests
             tests_and_bills.append({'date_time_conducted': str(visit.date_time), 'tests': test_data, 'visit_id' : visit.id, 'total_tests_cost':str(visit.total_tests_cost)})
-    
-        response_obj = {"tests_data" : tests_and_bills}
+            response_obj = {"tests_data" : tests_and_bills}
         return render(request, 'patient_tests.html', response_obj)
 
 
@@ -225,4 +227,5 @@ class LabLogout(View):
     
 class PatientLogout(View):
     def get(self, request):
+        logout(request)
         return redirect('patientlogin')
