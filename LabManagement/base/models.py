@@ -1,9 +1,10 @@
 from django.db import models
-
+import uuid
 # Create your models here.
 from django.contrib.auth.models import AbstractUser
 
 class LabAdmin(AbstractUser):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
     mobile_number = models.CharField(max_length=20)
@@ -11,6 +12,7 @@ class LabAdmin(AbstractUser):
         return str(self.name)
 
 class Patient(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100)
     email = models.EmailField()
     mobile_number = models.CharField(max_length=20)
